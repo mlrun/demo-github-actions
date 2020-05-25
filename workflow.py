@@ -43,7 +43,7 @@ def kfpipeline():
             name="train",
             params={"sample"          : -1, 
                     "label_column"    : LABELS,
-                    "test_size"       : 0.10},
+                    "test_size"       : 0.20},
             hyperparams={'model_pkg_class': ["sklearn.ensemble.RandomForestClassifier", 
                                              "sklearn.linear_model.LogisticRegression",
                                              "sklearn.ensemble.AdaBoostClassifier"]},
