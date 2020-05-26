@@ -1,7 +1,7 @@
 # ML Pipeline Automation and CI/CD Using GitHub Actions, Kubeflow and MLRun
 
-Automated machine learning (ML) pipelines are used to run a multi-stage workflow which comprise of 
-data ingestion, data preparation, model training , validation and finally deployment.
+Machine learning (ML) pipelines allow us to automate multi-stage workflow which comprise of 
+data ingestion, data preparation, model training, validation and finally deployment.
 
 Every time our code, data or parameters change we may want to re-evaluate our model accuracy and performance before we deploy.
 This resembles the CI/CD practice for delivering code to production with the additional aspects of data and parameter/configuration versioning,
@@ -12,7 +12,7 @@ of machine learning projects using the following tools:
 
 * [**GitHub actions**](https://github.com/features/actions) - used for code and metadata versioning, workflow triggering, and process tracking
 * [**Kubeflow Pipelines**](https://www.kubeflow.org/docs/pipelines/overview/pipelines-overview/) - Used to execute ML pipeline steps on a (remote) Kubernetes cluster  
-* [**MLRun**](https://github.com/mlrun/mlrun) - Used to deploy and track the code, pipeline, data and the results/artifacts.
+* [**MLRun**](https://github.com/mlrun/mlrun) - Used for end to end MLOps automation and tracking, [read more below](#mlrun-overview).
 
 To clone and run with your own environment or on [**iguazio data science platform**](https://www.iguazio.com/), check the [**instructions below**](#how-to-run-with-your-cluster).
 
@@ -49,6 +49,17 @@ MLRUn will write a result summary as a comment back into your PR with links to m
 
 <br><p align="center"><img src="docs/mlrun.png" width="700"/></p><br>
 
+## What Is MLRun? 
+
+MLRun is the first and currently only integrated open-source framework for end to end MLOps automation, it:
+* Orchestrates job/pipeline from simple code or pre-baked functions (via Kubeflow and various k8s CRDs) 
+* Runs, tracks and version projects comprising of experiments, jobs/functions, data, code, models and more.
+* Provides an open marketplace for various ML, DL, Analytics, MLOps functions  
+* Runs iterative AutoML, Hyper-param, or data analysis tasks on a distributed cluster  
+* Automates deployment of models and real-time data processing functions using (Nuclio) real-time serverless engine 
+
+Read more in [mlrun/mlrun](https://github.com/mlrun/mlrun)
+
 ## How To Run With Your Cluster
 
 ### Prerequisites
@@ -66,7 +77,7 @@ Or use [**iguazio data science platform**](https://www.iguazio.com/) with all of
 
 Under the repo settings select the `secrets` tab and configure the following:
 
-* `MLRUN_DBPATH` - remote URL to mlrun service (e.g. http://<user>:<token>@<address:port>) 
+* `MLRUN_DBPATH` - remote URL to mlrun service (e.g. `https://<user>:<token>@<address:port>`) 
 * `TOKEN` - github access token 
 
 When using Iguazio platform your pipeline may need additional data access and you should set the following:  
