@@ -48,7 +48,7 @@ def kfpipeline():
                                              "sklearn.linear_model.LogisticRegression",
                                              "sklearn.ensemble.AdaBoostClassifier"]},
             selector='max.accuracy',
-            inputs={"dataset"         : ingest.outputs[DATASET]},
+            #inputs={"dataset"         : ingest.outputs[DATASET]},
             labels={"commit": this_project.params.get('commit', '')},
             outputs=['model', 'test_set'])
 
