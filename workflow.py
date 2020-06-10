@@ -24,46 +24,39 @@ def init_functions(functions: dict, project=None, secrets=None):
 def kfpipeline():
     
     
-    exit_task = NewTask(handler='run_summary_comment')
-    exit_task.with_params(workflow_id='{{workflow.uid}}', 
-                          repo=this_project.params.get('git_repo'),
-                          issue=this_project.params.get('git_issue'))
-    exit_task.with_secrets('inline', {'GITHUB_TOKEN': this_project.get_secret('GITHUB_TOKEN')})
-    with dsl.ExitHandler(funcs['git_utils'].as_step(exit_task, name='exit-handler')):
+    # run the ingestion function with the new image and params
+    ingest = funcs['gen-iris'].as_step(
+        name="get-data",
+        handler='iris_generator',
+        params={'format': 'pq'},
+        outputs=[DATASET])
 
-        # run the ingestion function with the new image and params
-        ingest = funcs['gen-iris'].as_step(
-            name="get-data",
-            handler='iris_generator',
-            params={'format': 'pq'},
-            outputs=[DATASET])
+    # train with hyper-paremeters
+    train = funcs["train"].as_step(
+        name="train",
+        params={"sample"          : -1,
+                "label_column"    : LABELS,
+                "test_size"       : 0.10},
+        hyperparams={'model_pkg_class': ["sklearn.ensemble.RandomForestClassifier",
+                                         "sklearn.linear_model.LogisticRegression",
+                                         "sklearn.ensemble.AdaBoostClassifier"]},
+        selector='max.accuracy',
+        inputs={"dataset"         : ingest.outputs[DATASET]},
+        labels={"commit": this_project.params.get('commit', '')},
+        outputs=['model', 'test_set'])
 
-        # train with hyper-paremeters 
-        train = funcs["train"].as_step(
-            name="train",
-            params={"sample"          : -1, 
-                    "label_column"    : LABELS,
-                    "test_size"       : 0.10},
-            hyperparams={'model_pkg_class': ["sklearn.ensemble.RandomForestClassifier", 
-                                             "sklearn.linear_model.LogisticRegression",
-                                             "sklearn.ensemble.AdaBoostClassifier"]},
-            selector='max.accuracy',
-            #inputs={"dataset"         : ingest.outputs[DATASET]},
-            labels={"commit": this_project.params.get('commit', '')},
-            outputs=['model', 'test_set'])
+    # test and visualize our model
+    test = funcs["test"].as_step(
+        name="test",
+        params={"label_column": LABELS},
+        inputs={"models_path" : train.outputs['model'],
+                "test_set"    : train.outputs['test_set']})
 
-        # test and visualize our model
-        test = funcs["test"].as_step(
-            name="test",
-            params={"label_column": LABELS},
-            inputs={"models_path" : train.outputs['model'],
-                    "test_set"    : train.outputs['test_set']})
+    # deploy our model as a serverless function
+    deploy = funcs["serving"].deploy_step(models={f"{DATASET}_v1": train.outputs['model']},
+                                          tag=this_project.params.get('commit', 'v1'))
 
-        # deploy our model as a serverless function
-        deploy = funcs["serving"].deploy_step(models={f"{DATASET}_v1": train.outputs['model']}, 
-                                              tag=this_project.params.get('commit', 'v1')[:6])
-
-        # test out new model server (via REST API calls)
-        tester = funcs["live_tester"].as_step(name='model-tester',
-            params={'addr': deploy.outputs['endpoint'], 'model': f"{DATASET}_v1"},
-            inputs={'table': train.outputs['test_set']})
+    # test out new model server (via REST API calls)
+    tester = funcs["live_tester"].as_step(name='model-tester',
+        params={'addr': deploy.outputs['endpoint'], 'model': f"{DATASET}_v1"},
+        inputs={'table': train.outputs['test_set']})
