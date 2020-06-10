@@ -17,7 +17,7 @@ jobs:
     - name: Install mlrun
       run: python -m pip install git+https://github.com/mlrun/mlrun.git@development
     - name: Submit project
-      run: python -m mlrun project ./ --git-issue "${{github.event.issue.number}}" --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT} -r main ${CMD:5}
+      run: python -m mlrun project ./ --git-issue "${{github.event.issue.number}}" --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT:33} -r main ${CMD:5}
       env:
         V3IO_USERNAME: admin
         V3IO_API: ${{ secrets.V3IO_API }}
