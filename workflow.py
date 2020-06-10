@@ -24,7 +24,7 @@ def init_functions(functions: dict, project=None, secrets=None):
 def kfpipeline():
     
     
-    # run the ingestion function with the new image and params
+    # run the ingestion function with the new image and params 
     ingest = funcs['gen-iris'].as_step(
         name="get-data",
         handler='iris_generator',
