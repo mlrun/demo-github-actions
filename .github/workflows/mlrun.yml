@@ -3,7 +3,7 @@ on: [issue_comment]
 
 jobs:
   submit-project:
-    if: github.event.issue.pull_request != null &&  startsWith(github.event.comment.body, '/run')
+    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run')
     runs-on: ubuntu-latest
 
     steps:
@@ -19,11 +19,12 @@ jobs:
     - name: Submit project
       run: python -m mlrun project ./ --git-issue "${{github.event.issue.number}}" --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT:33} -r main ${CMD:5}
       env:
-        V3IO_USERNAME: admin
+        V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
+        V3IO_PASSWORD: ${{ secrets.V3IO_USERNAME }}
         V3IO_API: ${{ secrets.V3IO_API }}
         V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
         MLRUN_DBPATH: ${{ secrets.MLRUN_DBPATH }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        TOKEN: ${{ secrets.TOKEN }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         CMD: ${{ github.event.comment.body}}  
         COMMIT: ${{ github.sha}}
