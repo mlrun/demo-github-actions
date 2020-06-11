@@ -41,6 +41,10 @@ MLRUn will write a result summary as a comment back into your PR with links to m
 
 <br><p align="center"><img src="docs/pr.png" width="500"/></p><br> 
 
+**This is an example of the summary report sent to `Slack`:**
+
+<br><p align="center"><img src="docs/slack.png" width="400"/></p><br> 
+
 **The Kubeflow pipeline graph**
 
 <br><p align="center"><img src="docs/pipeline.png" width="600"/></p><br>
