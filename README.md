@@ -80,14 +80,19 @@ Or use [**iguazio data science platform**](https://www.iguazio.com/) with all of
 #### 2. Configure the required secrets and addresses
 
 Under the repo settings select the `secrets` tab and configure the following:
+* `MLRUN_DBPATH` - remote URL to mlrun service (e.g. `https://<address:port>`) 
+* `SLACK_WEBHOOK` - optional, if you would like to get run summary into your slack 
 
-* `MLRUN_DBPATH` - remote URL to mlrun service (e.g. `https://<user>:<token>@<address:port>`) 
-* `TOKEN` - github access token 
-
-When using Iguazio platform your pipeline may need additional data access and you should set the following:  
-
+When using Iguazio platform your should set the following:  
+* `V3IO_USERNAME` - Iguazio platform username
 * `V3IO_ACCESS_KEY` - Iguazio V3IO data layer credentials (copy from your user settings)
-* `V3IO_API` - V3IO API url (copy from the services screen)
+* `V3IO_PASSWORD` - user password
+* `V3IO_API` - V3IO data access API url (copy from the services screen)
+
+When using the open source version and a secure API gateway you can use the following secrets 
+* `MLRUN_HTTPDB__USER` - remote username
+* `MLRUN_HTTPDB__PASSWORD` (for basic auth) or `MLRUN_HTTPDB__TOKEN` (for Bearer token) 
+
 
 ### Customize 
 
