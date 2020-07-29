@@ -23,7 +23,6 @@ def init_functions(functions: dict, project=None, secrets=None):
 )
 def kfpipeline():
     
-    
     # run the ingestion function with the new image and params
     ingest = funcs['gen-iris'].as_step(
         name="get-data",
@@ -31,6 +30,12 @@ def kfpipeline():
         params={'format': 'pq'},
         outputs=[DATASET])
 
+    # analyze our dataset
+    describe = funcs["describe"].as_step(
+        name="summary",
+        params={"label_column": LABELS},
+        inputs={"table": ingest.outputs[DATASET]})
+    
     # train with hyper-paremeters
     train = funcs["train"].as_step(
         name="train",

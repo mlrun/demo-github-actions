@@ -19,15 +19,17 @@ functions:
           doc: ''
           parameters:
           - name: context
+            default: ''
           - name: format
             default: csv
-          outputs: []
+          outputs:
+          - default: ''
           lineno: 11
       description: ''
       build:
         functionSourceCode: IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmZyb20gc2tsZWFybi5kYXRhc2V0cyBpbXBvcnQgbG9hZF9pcmlzCmZyb20gc2tsZWFybi5tb2RlbF9zZWxlY3Rpb24gaW1wb3J0IHRyYWluX3Rlc3Rfc3BsaXQKaW1wb3J0IG51bXB5IGFzIG5wCmZyb20gc2tsZWFybi5tZXRyaWNzIGltcG9ydCBhY2N1cmFjeV9zY29yZQpmcm9tIG1scnVuLmFydGlmYWN0cyBpbXBvcnQgVGFibGVBcnRpZmFjdCwgUGxvdEFydGlmYWN0CmltcG9ydCBwYW5kYXMgYXMgcGQKCmRlZiBpcmlzX2dlbmVyYXRvcihjb250ZXh0LCBmb3JtYXQ9J2NzdicpOgogICAgaXJpcyA9IGxvYWRfaXJpcygpCiAgICBpcmlzX2RhdGFzZXQgPSBwZC5EYXRhRnJhbWUoZGF0YT1pcmlzLmRhdGEsIGNvbHVtbnM9aXJpcy5mZWF0dXJlX25hbWVzKQogICAgaXJpc19sYWJlbHMgPSBwZC5EYXRhRnJhbWUoZGF0YT1pcmlzLnRhcmdldCwgY29sdW1ucz1bJ2xhYmVsJ10pCiAgICBpcmlzX2RhdGFzZXQgPSBwZC5jb25jYXQoW2lyaXNfZGF0YXNldCwgaXJpc19sYWJlbHNdLCBheGlzPTEpCiAgICAKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ3NhdmluZyBpcmlzIGRhdGFmcmFtZSB0byB7fScuZm9ybWF0KGNvbnRleHQuYXJ0aWZhY3RfcGF0aCkpCiAgICBjb250ZXh0LmxvZ19kYXRhc2V0KCdpcmlzX2RhdGFzZXQnLCBkZj1pcmlzX2RhdGFzZXQsIGZvcm1hdD1mb3JtYXQsIGluZGV4PUZhbHNlKQoK
         commands: []
-        code_origin: https://github.com/mlrun/demo-github-actions.git#3395573d8f1c7ad4725314afb3d067751bbea465:gen_iris.ipynb
+        code_origin: https://github.com/mlrun/demo-github-actions.git#0e717588b1354d3d60cd96ba5c352d71aace0552
 - url: hub://sklearn_classifier
   name: train
 - url: hub://test_classifier
@@ -36,8 +38,10 @@ functions:
   name: serving
 - url: hub://model_server_tester
   name: live_tester
+- url: hub://describe
+  name: describe
 workflows:
 - name: main
   path: workflow.py
 artifacts: []
-artifact_path: v3io:///users/admin/pipe/{{workflow.uid}}
+artifact_path: v3io:///users/{{run.user}}/pipe/{{workflow.uid}}
